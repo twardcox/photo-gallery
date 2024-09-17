@@ -1,9 +1,14 @@
-import './globals.css'
+'use client'
 
-export const metadata = {
-  title: 'Next.js',
-  description: 'AWS S3 Upload Example',
-}
+import '../styles/global.scss';
+import Header from '../components/Header';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query'
+
+// Create a client
+const queryClient = new QueryClient()
 
 export default function RootLayout({
   children,
@@ -12,7 +17,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <QueryClientProvider client={queryClient}>
+          <Header />
+          {children}
+        </QueryClientProvider>
+      </body>
     </html>
   )
 }

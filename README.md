@@ -3,7 +3,7 @@ name: AWS S3 Image Upload
 slug: aws-s3-image-upload
 description: Learn to use AWS S3 to upload images to your bucket.
 framework: Next.js
-deployUrl: https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/aws-s3-image-upload&project-name=aws-s3-image-upload&repository-name=aws-s3-image-upload&env=AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,AWS_BUCKET_NAME
+deployUrl: https://vercel.com/new/clone?repository-url=https://github.com/vercel/examples/tree/main/solutions/aws-s3-image-upload&project-name=aws-s3-image-upload&repository-name=aws-s3-image-upload&env=AWS_ACCESS_KEY_ID,AWS_SECRET_ACCESS_KEY,AWS_REGION,NEXT_PUBLIC_AWS_BUCKET_NAME
 ---
 
 # Next.js + AWS S3 Upload
@@ -80,7 +80,7 @@ const s3 = new S3Client({
   accessKeyId: process.env.ACCESS_KEY,
   secretAccessKey: process.env.SECRET_ACCESS_KEY,
   region: process.env.REGION,
-})
+});
 ```
 
 Instead, it can be replaced with this:
