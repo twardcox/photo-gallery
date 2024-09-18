@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-
 const fetchImages = () => {
   return fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/get?action=getall')
     .then((response) => {
@@ -11,12 +9,19 @@ const fetchImages = () => {
       }
     })
     .then((images) => {
-      images.forEach(async (image) => {
-        const metadata = await fetchMetadata(image).then((res) => res);
-        image.metadata = metadata.Metadata;
+      images.forEach((image) => {
         image.original = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
         image.thumbnail = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
       });
+
+      return images;
+    })
+    .then((images) => {
+      images.forEach(async (image) => {
+        const metadata = await fetchMetadata(image).then((res) => res);
+        image.metadata = metadata.Metadata;
+      });
+
       return images;
     })
     .catch((error) => {
