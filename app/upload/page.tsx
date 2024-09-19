@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export default function Page() {
   const [file, setFile] = useState<File | null>(null)

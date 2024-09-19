@@ -7,7 +7,6 @@ import fetchImages from "../api/queries";
 const Page = () => {
 
   const { data } = useQuery({ queryKey: ['images'], queryFn: fetchImages })
-  console.log('data: ', data);
 
   return (
     <main>
