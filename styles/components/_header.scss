@@ -26,6 +26,11 @@
     text-decoration: none;
     background-color: var(--color-black);
     color: var(--color-orange);
+    font-size: 1.5rem;
+
+    &.active {
+      color: var(--color-yellow);
+    }
 
     &:hover {
       color: var(--color-yellow);

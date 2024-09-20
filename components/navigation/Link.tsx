@@ -2,21 +2,20 @@
 
 import { usePathname } from "next/navigation";
 import React from "react";
-import Link from "next/link";
 import classnames from "classnames";
 
-interface NavLinkProps {
+interface LinkProps {
   path: string;
   label: string;
 }
 
-export const NavLink: React.FC<NavLinkProps> = ({ path, label }) => {
+export const Link: React.FC<LinkProps> = ({ path, label }) => {
   const pathname = usePathname();
   const isRouteActive = (path: string) => pathname === path;
 
   return (
-    <Link href={path} className={classnames('nav-link', { 'activ': isRouteActive(path) })}>
+    <a href={path} className={classnames({ 'active': isRouteActive(path) })}>
       {label}
-    </Link>
+    </a>
   );
 };
