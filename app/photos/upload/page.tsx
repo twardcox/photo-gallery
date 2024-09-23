@@ -1,59 +1,91 @@
 'use client'
 
 import { useState } from 'react'
-import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import ImageGallery from "react-image-gallery";
 
 export default withPageAuthRequired(function Page() {
-  const [file, setFile] = useState<File | null>(null)
+  const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
+  const [showFiles, setShowFiles] = useState(null)
+  const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
-    if (!file) {
+    if (!files) {
       alert('Please select a file to upload.')
       return
     }
+    // start mapping here
+    Array.from(files).forEach(async (file) => {
 
-    setUploading(true)
-
-    const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL + '/api/upload',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ filename: file.name, contentType: file.type }),
+      if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
+        alert('Please select a PNG or JPEG file.')
+        return
       }
-    )
 
-    if (response.ok) {
-      const { url, fields } = await response.json()
+      setUploading(true)
+      const filename = `${file.name.replace(' ', '_')}${file.lastModified}}`
+      const metaData = { 'x-amz-meta-name': user.name }
+      const response = await fetch(
+        process.env.NEXT_PUBLIC_BASE_URL + '/api/upload',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ filename: filename, contentType: file.type, metaData: metaData }),
+        }
+      )
 
-      const formData = new FormData()
-      Object.entries(fields).forEach(([key, value]) => {
-        formData.append(key, value as string)
-      })
-      formData.append('file', file)
+      if (response.ok) {
+        const { url, fields } = await response.json()
 
-      const uploadResponse = await fetch(url, {
-        method: 'POST',
-        body: formData,
-      })
+        const formData = new FormData()
 
-      if (uploadResponse.ok) {
-        alert('Upload successful!')
+        Object.entries(fields).forEach(([key, value]) => {
+          formData.append(key, value as string)
+        })
+
+        formData.append('file', file)
+
+        const uploadResponse = await fetch(url, {
+          method: 'POST',
+          body: formData,
+        })
+
+        if (uploadResponse.ok) {
+          alert('Upload successful!')
+        } else {
+          console.error('S3 Upload Error:', uploadResponse)
+          alert('Upload failed.')
+        }
       } else {
-        console.error('S3 Upload Error:', uploadResponse)
-        alert('Upload failed.')
+        alert('Failed to get pre-signed URL.')
       }
-    } else {
-      alert('Failed to get pre-signed URL.')
-    }
-
+    })
+    setFiles(null)
+    setShowFiles(null)
     setUploading(false)
   }
+
+  const handleSelectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setShowFiles(true)
+    const files = e.target.files
+    if (files) {
+      setFiles(files)
+      const filesToShow = Array.from(files).map((file) => {
+        const image = {
+          ...file,
+          original: URL.createObjectURL(file),
+          thumbnail: URL.createObjectURL(file),
+        };
+        return image;
+      });
+      setShowFiles(filesToShow);
+    }
+  };
 
   return (
     <main>
@@ -62,18 +94,17 @@ export default withPageAuthRequired(function Page() {
         <input
           id="file"
           type="file"
-          onChange={(e) => {
-            const files = e.target.files
-            if (files) {
-              setFile(files[0])
-            }
-          }}
+          onChange={handleSelectFiles}
           accept="image/png, image/jpeg"
+          multiple={true}
         />
         <button type="submit" disabled={uploading}>
           Upload
         </button>
       </form>
+      <section>
+        {showFiles && <ImageGallery items={showFiles} />}
+      </section>
     </main>
   )
 })
