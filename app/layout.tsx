@@ -1,13 +1,11 @@
 'use client'
 
 import '../styles/global.scss';
-import Header from '../components/Header';
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
 import { UserProvider } from "@auth0/nextjs-auth0/client";
-// import { PageLoader } from "@/components/page-loader";
 
 
 // Create a client
@@ -22,14 +20,17 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body>
-        <UserProvider>
-          <QueryClientProvider client={queryClient}>
-            <Header />
+      <head>
+        <meta charSet="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      </head>
+      <UserProvider>
+        <QueryClientProvider client={queryClient}>
+          <body>
             {children}
-          </QueryClientProvider>
-        </UserProvider>
-      </body>
+          </body>
+        </QueryClientProvider>
+      </UserProvider>
     </html>
   )
 }

@@ -45,7 +45,7 @@ const Profile: NextPage = withPageAuthRequired(
       </div>
     );
   },
-  { returnTo: "/profile" },
+  { returnTo: "admin/profile" },
 );
 
 export default Profile;

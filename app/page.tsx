@@ -1,5 +1,6 @@
 'use client'
 
+import Header from "@/components/Header";
 import { useUser } from "@auth0/nextjs-auth0/client";
 export default function Page() {
   const { isLoading } = useUser();
@@ -12,8 +13,9 @@ export default function Page() {
     );
   }
   return (
-    <main>
+    <>
+      <Header />
       <h1>Welcome to my gallery</h1>
-    </main>
+    </>
   )
 }

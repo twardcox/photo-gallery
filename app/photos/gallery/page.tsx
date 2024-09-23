@@ -2,10 +2,10 @@
 
 import ImageGallery from "react-image-gallery";
 import { useQuery } from '@tanstack/react-query'
-import fetchImages from "../api/queries";
+import fetchImages from "../../api/queries";
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
-const Page = () => {
-
+export default withPageAuthRequired(function Page() {
   const { data } = useQuery({ queryKey: ['images'], queryFn: fetchImages })
 
   return (
@@ -13,6 +13,4 @@ const Page = () => {
       {data && <ImageGallery items={data} />}
     </main>
   )
-}
-
-export default Page;
+})

@@ -1,8 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
-export default function Page() {
+export default withPageAuthRequired(function Page() {
   const [file, setFile] = useState<File | null>(null)
   const [uploading, setUploading] = useState(false)
 
@@ -75,4 +76,4 @@ export default function Page() {
       </form>
     </main>
   )
-}
+})
