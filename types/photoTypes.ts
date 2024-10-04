@@ -1,5 +1,9 @@
 export interface PhotoAlbumProps {
   photos: PhotoProps[];
+  layout: 'columns' | 'rows' | 'masonry';
+  viewMetadata: boolean;
+  columns: number;
+  albumView: 'columns' | 'rows' | 'masonry';
 }
 
 export interface PhotoProps {

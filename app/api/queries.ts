@@ -1,6 +1,6 @@
-import { Photo } from '@/types/photoTypes';
+import { PhotoProps } from '@/types/photoTypes';
 
-const fetchImages: () => any = () => {
+const fetchImages = () => {
   return fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/get?action=getall')
     .then((response) => {
       if (response.ok) {
@@ -10,9 +10,9 @@ const fetchImages: () => any = () => {
         throw new Error('Failed to fetch images');
       }
     })
-    .then((images: Photo[]) => {
-      const promises = images.map((image: Photo) => {
-        return new Promise<Photo>((resolve, reject) => {
+    .then((images: PhotoProps[]) => {
+      const promises = images.map((image: PhotoProps) => {
+        return new Promise<PhotoProps>((resolve, reject) => {
           const img = new Image();
           img.onload = () => {
             image.src = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
@@ -39,8 +39,8 @@ const fetchImages: () => any = () => {
 
       return Promise.all(promises);
     })
-    .then((images: Photo[]) => {
-      images.forEach(async (image: Photo) => {
+    .then((images: PhotoProps[]) => {
+      images.forEach(async (image: PhotoProps) => {
         const metadata = await fetchMetadata(image).then((res) => res);
         image.metadata = metadata.Metadata;
       });
@@ -52,7 +52,7 @@ const fetchImages: () => any = () => {
     });
 };
 
-const fetchMetadata = async (image: Photo) => {
+const fetchMetadata = async (image: PhotoProps) => {
   try {
     const response = await fetch(
       process.env.NEXT_PUBLIC_BASE_URL +

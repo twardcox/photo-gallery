@@ -1,36 +1,13 @@
 'use client'
 
 import { PhotoAlbumProps, RenderImageContextProps } from "@/types/photoTypes";
-import AlbumOptions from "./AlbumOptions";
-import { ChangeEvent, FC, useState } from "react";
+import { FC } from "react";
 import PhotoAlbum, { RenderImageProps } from "react-photo-album";
 import "react-photo-album/styles.css";
 import Image from "next/image";
-import classnames from "classnames";
-
-const Album: FC<PhotoAlbumProps> = ({ photos }) => {
-  const [viewOptions, setViewOptions] = useState<'frames' | 'carousel'>('frames');
-  const [albumView, setAlbumView] = useState<'columns' | 'rows' | 'masonry'>('rows');
-  const [viewMetadata, setViewMetadata] = useState(false);
-  const [columns, setColumns] = useState<number>(0);
 
 
-  const handleMetadataView = () => {
-    setViewMetadata(!viewMetadata);
-  }
-
-  const handleAlbumView = (view: 'columns' | 'rows' | 'masonry') => {
-    setAlbumView(view);
-  }
-
-  const handleImageView = (view: 'frames' | 'carousel') => {
-    setViewOptions(view);
-  }
-
-  const handleColumnsChange = (event: ChangeEvent<HTMLSelectElement>) => {
-    const newColumns = parseInt(event.target.value, 10);
-    setColumns(newColumns);
-  };
+const Album: FC<PhotoAlbumProps> = ({ photos, albumView, viewMetadata, columns }) => {
 
   const renderMetadata = (metadata: any) => {
     return Object.keys(metadata).map((key) => {
@@ -52,7 +29,6 @@ const Album: FC<PhotoAlbumProps> = ({ photos }) => {
           }}
         >
           <Image
-
             fill
             src={photo}
             alt={alt}
@@ -71,17 +47,6 @@ const Album: FC<PhotoAlbumProps> = ({ photos }) => {
 
   return (
     <>
-      <div className={classnames("options", { hasColumns: viewOptions === 'frames' && albumView === 'columns' })}>
-        <AlbumOptions
-          metadataView={handleMetadataView}
-          handleAlbumView={handleAlbumView}
-          handleImageView={handleImageView}
-          viewOptions={viewOptions}
-          columns={columns}
-          handleColumnsChange={handleColumnsChange}
-          albumView={albumView}
-        />
-      </div>
       <PhotoAlbum
         layout={albumView}
         photos={photos}
