@@ -1,3 +1,5 @@
+@import 'breakpoints';
+
 .album-options {
   i {
     color: var(--color-medium-grey);
@@ -7,5 +9,19 @@
     background-color: var(--color-opaque-grey);
     border: none;
     padding: 0.5rem
+  }
+}
+
+
+.select-columns {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1rem;
+}
+
+@include for_breakpoint('mobile') {
+  .select-columns {
+    margin-top: 1rem;
   }
 }
