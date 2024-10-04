@@ -39,13 +39,14 @@ export default withPageAuthRequired(function Page() {
   const renderImagesForCarousel = (data: any[]) => {
     return data.map((photo: PhotoProps, index: number) => {
       return (
-        <div key={photo.key} className="carousel-item" data-value={index}>
+        <div key={photo.key} className="item" data-value={index}>
           <Image
+            fill
             src={photo.src}
             alt={'photo.alt'}
             title={'photo.title'}
-            height={photo.height}
-            width={photo.width}
+          // height={photo.height}
+          // width={photo.width}
           />
         </div>
       )

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useState } from 'react';
 import AliceCarousel from 'react-alice-carousel';
-import 'react-alice-carousel/lib/alice-carousel.css';
+import 'react-alice-carousel/lib/scss/alice-carousel.scss';
 
 const thumbItems = (items: any[], [setThumbIndex, setThumbAnimation]: [Dispatch<SetStateAction<number>>, Dispatch<SetStateAction<boolean>>]) => {
   return items.map((item, i) => (
