@@ -1,4 +1,6 @@
-const fetchImages = () => {
+import { Photo } from '@/types/photoTypes';
+
+const fetchImages: () => any = () => {
   return fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/get?action=getall')
     .then((response) => {
       if (response.ok) {
@@ -8,16 +10,37 @@ const fetchImages = () => {
         throw new Error('Failed to fetch images');
       }
     })
-    .then((images) => {
-      images.forEach((image) => {
-        image.original = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
-        image.thumbnail = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
+    .then((images: Photo[]) => {
+      const promises = images.map((image: Photo) => {
+        return new Promise<Photo>((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            image.src = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > 350) {
+              const aspectRatio = height / width;
+              width = 350;
+              height = width * aspectRatio;
+            }
+
+            image.width = width;
+            image.height = height;
+            resolve(image);
+          };
+          img.onerror = (err) => {
+            console.error('Failed to load image:', err);
+            reject(err);
+          };
+          img.src = `https://s3.amazonaws.com/${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}/${image.key}`;
+        });
       });
 
-      return images;
+      return Promise.all(promises);
     })
-    .then((images) => {
-      images.forEach(async (image) => {
+    .then((images: Photo[]) => {
+      images.forEach(async (image: Photo) => {
         const metadata = await fetchMetadata(image).then((res) => res);
         image.metadata = metadata.Metadata;
       });
@@ -29,7 +52,7 @@ const fetchImages = () => {
     });
 };
 
-const fetchMetadata = async (image) => {
+const fetchMetadata = async (image: Photo) => {
   try {
     const response = await fetch(
       process.env.NEXT_PUBLIC_BASE_URL +

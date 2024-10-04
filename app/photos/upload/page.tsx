@@ -2,17 +2,16 @@
 
 import { useState } from 'react'
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import ImageGallery from "react-image-gallery";
 
 export default withPageAuthRequired(function Page() {
   const [files, setFiles] = useState<FileList | null>(null)
   const [uploading, setUploading] = useState(false)
-  const [showFiles, setShowFiles] = useState(null)
+  const [showFiles, setShowFiles] = useState<Array<{ original: string; thumbnail: string; lastModified: number; name: string; webkitRelativePath: string; size: number; type: string; arrayBuffer(): Promise<ArrayBuffer>; slice(start?: number | undefined, end?: number | undefined, contentType?: string | undefined): Blob; stream(): ReadableStream<any>; text(): Promise<string>; }> | null>([])
   const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-
+    const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp)$/i;
     if (!files) {
       alert('Please select a file to upload.')
       return
@@ -26,8 +25,8 @@ export default withPageAuthRequired(function Page() {
       }
 
       setUploading(true)
-      const filename = `${file.name.replace(' ', '_')}${file.lastModified}}`
-      const metaData = { 'x-amz-meta-name': user.name }
+      const filename = `${file.name.replace(' ', '_').replace(imageRegex, '')}${file.lastModified}`
+      const metaData = { 'x-amz-meta-name': user?.name }
       const response = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + '/api/upload',
         {
@@ -71,7 +70,7 @@ export default withPageAuthRequired(function Page() {
   }
 
   const handleSelectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowFiles(true)
+    setShowFiles(null)
     const files = e.target.files
     if (files) {
       setFiles(files)
@@ -88,7 +87,7 @@ export default withPageAuthRequired(function Page() {
   };
 
   return (
-    <main>
+    <main className='uploads'>
       <h1>Upload a File to S3</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -102,9 +101,9 @@ export default withPageAuthRequired(function Page() {
           Upload
         </button>
       </form>
-      <section>
+      {/* <section>
         {showFiles && <ImageGallery items={showFiles} />}
-      </section>
+      </section> */}
     </main>
   )
 })

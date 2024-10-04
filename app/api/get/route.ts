@@ -31,7 +31,10 @@ async function getAllImages() {
       Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
     });
     const data = await client.send(command);
-
+    console.log('route data: ', data);
+    // src: assetLink(asset, breakpoint),
+    // width: breakpoint,
+    // height: Math.round((height / width) * breakpoint),
     const images =
       data.Contents?.map((item) => ({
         key: item.Key,

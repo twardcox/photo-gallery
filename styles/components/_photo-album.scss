@@ -1,0 +1,48 @@
+.album-wrapper {
+  position: relative;
+  width: -webkit-fill-available;
+}
+
+.album {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  gap: 1rem;
+  width: 100%;
+  color: var(--color-black);
+}
+
+.photo {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #000000;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  background-color: var(--color-light-grey);
+  box-shadow: 0 0 0.5rem #000000;
+}
+
+.photo img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.photo-data {
+  display: flex;
+  text-wrap: wrap;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
+  color: black;
+}
+
+.options {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+}
