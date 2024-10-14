@@ -1,8 +1,4 @@
-import {
-  S3Client,
-  HeadObjectCommand,
-  ListObjectsV2Command,
-} from '@aws-sdk/client-s3';
+import { S3Client, HeadObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { createPresignedPost } from '@aws-sdk/s3-presigned-post';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -28,7 +24,7 @@ async function getAllImages() {
   try {
     const client = new S3Client({ region: process.env.AWS_REGION });
     const command = new ListObjectsV2Command({
-      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME || '',
     });
     const data = await client.send(command);
     console.log('route data: ', data);
@@ -48,10 +44,7 @@ async function getAllImages() {
   }
 }
 
-async function getPresignedUrl(
-  filename: string | null,
-  contentType: string | null
-) {
+async function getPresignedUrl(filename: string | null, contentType: string | null) {
   if (!filename || !contentType) {
     return new Response('Missing filename or contentType', { status: 400 });
   }
@@ -59,7 +52,7 @@ async function getPresignedUrl(
   try {
     const client = new S3Client({ region: process.env.AWS_REGION });
     const { url, fields } = await createPresignedPost(client, {
-      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME,
+      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME || '',
       Key: uuidv4(),
       Conditions: [
         ['content-length-range', 0, 10485760], // up to 10 MB

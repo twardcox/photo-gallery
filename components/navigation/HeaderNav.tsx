@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef } from "react";
-import { Link } from "./Link";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import React, { useEffect, useRef } from 'react';
+import { Link } from './Link';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const HeaderNav = () => {
   const { user } = useUser();
@@ -10,7 +10,7 @@ export const HeaderNav = () => {
   useEffect(() => {
     if (!userRef.current) {
       userRef.current = user;
-      console.log("User logged in");
+      console.log('User logged in');
     }
   }, [user]);
 
@@ -24,11 +24,11 @@ export const HeaderNav = () => {
       )}
       {userRef.current && (
         <>
-          <Link path='/' label='Home' />
-          <Link path='/admin/profile' label='Profile' />
-          <Link path='/photos/gallery' label='View Gallery' />
-          <Link path='/photos/upload' label='Upload Images' />
-          <Link path='/api/auth/logout' label='Log Out' />
+          <Link path="/" label="Home" />
+          <Link path="/admin/profile" label="Profile" />
+          <Link path="/photos/gallery" label="View Gallery" />
+          <Link path="/photos/upload" label="Upload Images" />
+          <Link path="/api/auth/logout" label="Log Out" />
         </>
       )}
     </div>

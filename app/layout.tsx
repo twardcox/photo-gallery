@@ -1,23 +1,13 @@
-'use client'
+'use client';
 
 import '../styles/global.scss';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query'
-import { UserProvider } from "@auth0/nextjs-auth0/client";
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 // Create a client
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
       <head>
@@ -32,11 +22,9 @@ export default function RootLayout({
       </head>
       <UserProvider>
         <QueryClientProvider client={queryClient}>
-          <body>
-            {children}
-          </body>
+          <body>{children}</body>
         </QueryClientProvider>
       </UserProvider>
     </html>
-  )
+  );
 }

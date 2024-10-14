@@ -55,8 +55,7 @@ const fetchImages = () => {
 const fetchMetadata = async (image: PhotoProps) => {
   try {
     const response = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL +
-        `/api/get?action=getmetadata&key=${image.key}`
+      process.env.NEXT_PUBLIC_BASE_URL + `/api/get?action=getmetadata&key=${image.key}`,
     );
     if (!response.ok) {
       throw new Error('Failed to fetch metadata');

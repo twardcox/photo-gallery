@@ -1,9 +1,9 @@
-import { NextPage } from "next";
-import React from "react";
+import { NextPage } from 'next';
+import React from 'react';
 // import { CodeSnippet } from "@/components/code-snippet";
-import Image from "next/image";
-import { getUserProfileData } from "@/services/profile.service";
-import { withPageAuthRequired } from "@auth0/nextjs-auth0";
+import Image from 'next/image';
+import { getUserProfileData } from '@/services/profile.service';
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const Profile: NextPage = withPageAuthRequired(
   async () => {
@@ -45,7 +45,7 @@ const Profile: NextPage = withPageAuthRequired(
       </div>
     );
   },
-  { returnTo: "admin/profile" },
+  { returnTo: 'admin/profile' },
 );
 
 export default Profile;

@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import Header from "./Header"
+import Header from './Header';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 import { ReactNode } from 'react';
@@ -10,15 +10,13 @@ interface PageProps {
 }
 
 export default withPageAuthRequired(function Page({ children }: PageProps) {
-
   return (
     <>
       <Header />
       {children}
     </>
-  )
-})
-
+  );
+});
 
 // const PageLayout = ({ children }) => {
 //   return (

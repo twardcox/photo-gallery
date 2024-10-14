@@ -1,30 +1,32 @@
-'use client'
+'use client';
 
-import { PhotoAlbumProps, RenderImageContextProps } from "@/types/photoTypes";
-import { FC } from "react";
-import PhotoAlbum, { RenderImageProps } from "react-photo-album";
-import "react-photo-album/styles.css";
-import Image from "next/image";
-
+import { PhotoAlbumProps, RenderImageContextProps } from '@/types/photoTypes';
+import { FC } from 'react';
+import PhotoAlbum, { RenderImageProps } from 'react-photo-album';
+import 'react-photo-album/styles.css';
+import Image from 'next/image';
 
 const Album: FC<PhotoAlbumProps> = ({ photos, albumView, viewMetadata, columns }) => {
-
   const renderMetadata = (metadata: any) => {
     return Object.keys(metadata).map((key) => {
-      return <p className="photo-data" key={key}>{key}: {metadata[key]}</p>
-    })
-  }
+      return (
+        <p className="photo-data" key={key}>
+          {key}: {metadata[key]}
+        </p>
+      );
+    });
+  };
 
   const renderNextImage = (
-    { alt = "", title, sizes }: RenderImageProps,
+    { alt = '', title, sizes }: RenderImageProps,
     { photo, width, height }: RenderImageContextProps,
   ) => {
     return (
       <div className="photo">
         <div
           style={{
-            width: "100%",
-            position: "relative",
+            width: '100%',
+            position: 'relative',
             aspectRatio: `${width} / ${height}`,
           }}
         >
@@ -34,16 +36,13 @@ const Album: FC<PhotoAlbumProps> = ({ photos, albumView, viewMetadata, columns }
             alt={alt}
             title={title}
             sizes={sizes}
-            placeholder={"blurDataURL" in photo ? "blur" : undefined}
+            placeholder={'blurDataURL' in photo ? 'blur' : undefined}
           />
         </div>
-        {
-          viewMetadata &&
-          photo.metadata && renderMetadata(photo.metadata)
-        }
+        {viewMetadata && photo.metadata && renderMetadata(photo.metadata)}
       </div>
     );
-  }
+  };
 
   return (
     <>
@@ -62,6 +61,6 @@ const Album: FC<PhotoAlbumProps> = ({ photos, albumView, viewMetadata, columns }
       />
     </>
   );
-}
+};
 
 export default Album;

@@ -1,79 +1,91 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
+import { useState } from 'react';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 export default withPageAuthRequired(function Page() {
-  const [files, setFiles] = useState<FileList | null>(null)
-  const [uploading, setUploading] = useState(false)
-  const [showFiles, setShowFiles] = useState<Array<{ original: string; thumbnail: string; lastModified: number; name: string; webkitRelativePath: string; size: number; type: string; arrayBuffer(): Promise<ArrayBuffer>; slice(start?: number | undefined, end?: number | undefined, contentType?: string | undefined): Blob; stream(): ReadableStream<any>; text(): Promise<string>; }> | null>([])
+  const [files, setFiles] = useState<FileList | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [showFiles, setShowFiles] = useState<Array<{
+    original: string;
+    thumbnail: string;
+    lastModified: number;
+    name: string;
+    webkitRelativePath: string;
+    size: number;
+    type: string;
+    arrayBuffer(): Promise<ArrayBuffer>;
+    slice(
+      start?: number | undefined,
+      end?: number | undefined,
+      contentType?: string | undefined,
+    ): Blob;
+    stream(): ReadableStream<any>;
+    text(): Promise<string>;
+  }> | null>([]);
   const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     const imageRegex = /\.(jpg|jpeg|png|gif|bmp|webp)$/i;
     if (!files) {
-      alert('Please select a file to upload.')
-      return
+      alert('Please select a file to upload.');
+      return;
     }
     // start mapping here
     Array.from(files).forEach(async (file) => {
-
       if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
-        alert('Please select a PNG or JPEG file.')
-        return
+        alert('Please select a PNG or JPEG file.');
+        return;
       }
 
-      setUploading(true)
-      const filename = `${file.name.replace(' ', '_').replace(imageRegex, '')}${file.lastModified}`
-      const metaData = { 'x-amz-meta-name': user?.name }
-      const response = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + '/api/upload',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ filename: filename, contentType: file.type, metaData: metaData }),
-        }
-      )
+      setUploading(true);
+      const filename = `${file.name.replace(' ', '_').replace(imageRegex, '')}${file.lastModified}`;
+      const metaData = { 'x-amz-meta-name': user?.name };
+      const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/upload', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ filename: filename, contentType: file.type, metaData: metaData }),
+      });
 
       if (response.ok) {
-        const { url, fields } = await response.json()
+        const { url, fields } = await response.json();
 
-        const formData = new FormData()
+        const formData = new FormData();
 
         Object.entries(fields).forEach(([key, value]) => {
-          formData.append(key, value as string)
-        })
+          formData.append(key, value as string);
+        });
 
-        formData.append('file', file)
+        formData.append('file', file);
 
         const uploadResponse = await fetch(url, {
           method: 'POST',
           body: formData,
-        })
+        });
 
         if (uploadResponse.ok) {
-          alert('Upload successful!')
+          alert('Upload successful!');
         } else {
-          console.error('S3 Upload Error:', uploadResponse)
-          alert('Upload failed.')
+          console.error('S3 Upload Error:', uploadResponse);
+          alert('Upload failed.');
         }
       } else {
-        alert('Failed to get pre-signed URL.')
+        alert('Failed to get pre-signed URL.');
       }
-    })
-    setFiles(null)
-    setShowFiles(null)
-    setUploading(false)
-  }
+    });
+    setFiles(null);
+    setShowFiles(null);
+    setUploading(false);
+  };
 
   const handleSelectFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setShowFiles(null)
-    const files = e.target.files
+    setShowFiles(null);
+    const files = e.target.files;
     if (files) {
-      setFiles(files)
+      setFiles(files);
       const filesToShow = Array.from(files).map((file) => {
         const image = {
           ...file,
@@ -87,7 +99,7 @@ export default withPageAuthRequired(function Page() {
   };
 
   return (
-    <main className='uploads'>
+    <main className="uploads">
       <h1>Upload a File to S3</h1>
       <form onSubmit={handleSubmit}>
         <input
@@ -105,5 +117,5 @@ export default withPageAuthRequired(function Page() {
         {showFiles && <ImageGallery items={showFiles} />}
       </section> */}
     </main>
-  )
-})
+  );
+});

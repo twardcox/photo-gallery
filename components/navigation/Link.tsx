@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { usePathname } from "next/navigation";
-import React from "react";
-import classnames from "classnames";
+import { usePathname } from 'next/navigation';
+import React from 'react';
+import classnames from 'classnames';
 
 interface LinkProps {
   path: string;
@@ -14,7 +14,7 @@ export const Link: React.FC<LinkProps> = ({ path, label }) => {
   const isRouteActive = (path: string) => pathname === path;
 
   return (
-    <a href={path} className={classnames({ 'active': isRouteActive(path) })}>
+    <a href={path} className={classnames({ active: isRouteActive(path) })}>
       {label}
     </a>
   );

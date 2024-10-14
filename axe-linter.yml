@@ -1,0 +1,54 @@
+# axe-linter.yml
+
+# Define the rules and settings for the Axe Accessibility Extension
+rules:
+  # Enable all best practice rules
+  best-practice: true
+
+  # Example of enabling specific rules
+  # color-contrast: true
+  # label: true
+  # image-alt: true
+  # link-name: true
+  # region: true
+
+  # Example of disabling specific rules
+  # (Uncomment and set to false if needed)
+  # some-rule: false
+
+# Define any global settings
+settings:
+  # Example of setting a global timeout for the linter
+  timeout: 30000 # 30 seconds
+
+  # Example of setting the output format
+  output-format: json
+
+  # Example of setting the output directory
+  output-directory: ./axe-reports
+# Define any environment-specific settings
+# environments:
+# Example of setting specific settings for a development environment
+# development:
+#   rules:
+# Enable additional rules for development
+# heading-order: true
+# frame-title: true
+
+# Example of setting specific settings for a production environment
+# production:
+#   rules:
+# Disable some rules for production
+# heading-order: false
+# frame-title: false
+# Define any custom rules or plugins
+# custom-rules:
+# Example of adding a custom rule
+# - id: custom-rule-1
+#   description: 'Custom rule description'
+#   tags: ['custom', 'best-practice']
+#   evaluate: |
+#     function(node) {
+#       // Custom rule logic
+#       return true;
+#     }

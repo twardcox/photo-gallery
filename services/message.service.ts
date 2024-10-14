@@ -8,9 +8,7 @@ interface GetMessageParams {
   type: 'public' | 'protected' | 'admin';
 }
 
-export const getMessage = async ({
-  type,
-}: GetMessageParams): Promise<Message> => {
+export const getMessage = async ({ type }: GetMessageParams): Promise<Message> => {
   switch (type) {
     case 'public': {
       return {
