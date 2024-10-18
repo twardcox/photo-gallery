@@ -9,11 +9,24 @@ const thumbItems = (
     Dispatch<SetStateAction<boolean>>,
   ],
 ) => {
-  return items.map((item, i) => (
-    <div key={i} className="thumb" onClick={() => (setThumbIndex(i), setThumbAnimation(true))}>
+  return items.map((item, i) => {
+
+    return <div
+      key={i}
+      className="thumb"
+      role="button"
+      tabIndex={0}
+      onClick={() => { setThumbIndex(i); setThumbAnimation(true); }}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          setThumbIndex(i);
+          setThumbAnimation(true);
+        }
+      }}
+    >
       {item}
     </div>
-  ));
+  });
 };
 
 interface CarouselProps {
@@ -65,20 +78,26 @@ const Carousel: React.FC<CarouselProps> = ({ items }) => {
     }
   };
 
+  const handleOnKeyDown = (e: any, direction: string) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      direction === 'prev' ? slidePrev() : slideNext();
+    }
+  }
+
+
   return (
     <>
-      <h2 className='h2'>Carousel</h2>
-      <h1 className='h1'>React Alice Carousel</h1>
-      <img src='https://raw.githubusercontent.com/maxmarinich/react-alice-carousel/master/assets/logo.png' />
       <AliceCarousel
         activeIndex={mainIndex}
         animationType="fadeout"
-        animationDuration={800}
+        animationDuration={400}
         disableDotsControls
         disableButtonsControls
         items={items}
+        innerWidth={200}
         mouseTracking={!thumbAnimation}
         onSlideChange={syncMainBeforeChange}
+        keyboardNavigation
         onSlideChanged={syncMainAfterChange}
         touchTracking={!thumbAnimation}
       />
@@ -93,10 +112,22 @@ const Carousel: React.FC<CarouselProps> = ({ items }) => {
           onSlideChanged={syncThumbs}
           touchTracking={!mainAnimation}
         />
-        <div className="btn-prev" onClick={slidePrev}>
+        <div
+          className="btn-prev"
+          role="button"
+          tabIndex={0}
+          onClick={slidePrev}
+          onKeyDown={(e) => handleOnKeyDown(e, 'prev')}
+        >
           &lang;
         </div>
-        <div className="btn-next" onClick={slideNext}>
+        <div
+          className="btn-next"
+          role="button"
+          tabIndex={0}
+          onClick={slideNext}
+          onKeyDown={(e) => handleOnKeyDown(e, 'next')}
+        >
           &rang;
         </div>
       </div>

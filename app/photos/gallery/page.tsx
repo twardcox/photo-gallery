@@ -1,15 +1,15 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import fetchImages from '../../api/queries';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
-import Album from '@/components/PhotoAlbum';
+import { useQuery } from '@tanstack/react-query';
 import classnames from 'classnames';
+import Image from 'next/image';
 import { ChangeEvent, useState } from 'react';
 import AlbumOptions from '@/components/AlbumOptions';
 import Carousel from '@/components/Carousel';
+import Album from '@/components/PhotoAlbum';
 import { PhotoProps } from '@/types/photoTypes';
-import Image from 'next/image';
+import fetchImages from '../../api/queries';
 
 export default withPageAuthRequired(function Page() {
   const [viewOptions, setViewOptions] = useState<'frames' | 'carousel'>('carousel');
@@ -41,12 +41,11 @@ export default withPageAuthRequired(function Page() {
       return (
         <div key={photo.key} className="item" data-value={index}>
           <Image
-            fill
             src={photo.src}
             alt={'photo.alt'}
             title={'photo.title'}
-            // height={photo.height}
-            // width={photo.width}
+            height={photo.height}
+            width={photo.width}
           />
         </div>
       );
