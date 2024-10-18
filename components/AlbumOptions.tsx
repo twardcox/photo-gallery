@@ -44,9 +44,6 @@ const AlbumOptions = ({
         </div>
       )}
       <div className="album-options">
-        <button title="View Metadata" onClick={metadataView}>
-          <i className="material-icons">description</i>
-        </button>
         <button title="Carousel View" onClick={() => handleImageView('carousel')}>
           <i className="material-icons">view_carousel</i>
         </button>
@@ -55,6 +52,9 @@ const AlbumOptions = ({
         </button>
         {viewOptions === 'frames' && (
           <>
+            <button title="View Metadata" onClick={metadataView}>
+              <i className="material-icons">description</i>
+            </button>
             <button title="Columns View" onClick={() => handleAlbumView('columns')}>
               <i className="material-icons">view_column</i>
             </button>

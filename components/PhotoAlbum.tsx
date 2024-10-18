@@ -1,10 +1,10 @@
 'use client';
 
-import { PhotoAlbumProps, RenderImageContextProps } from '@/types/photoTypes';
+import Image from 'next/image';
 import { FC } from 'react';
 import PhotoAlbum, { RenderImageProps } from 'react-photo-album';
+import { PhotoAlbumProps, RenderImageContextProps } from '@/types/photoTypes';
 import 'react-photo-album/styles.css';
-import Image from 'next/image';
 
 const Album: FC<PhotoAlbumProps> = ({ photos, albumView, viewMetadata, columns }) => {
   const renderMetadata = (metadata: any) => {
