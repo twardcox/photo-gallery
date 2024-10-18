@@ -1,7 +1,9 @@
 'use client';
 
-import { useState } from 'react';
 import { useUser, withPageAuthRequired } from '@auth0/nextjs-auth0/client';
+import NextImage from 'next/image';
+import { useState } from 'react';
+import Carousel from '@/components/Carousel';
 
 export default withPageAuthRequired(function Page() {
   const [files, setFiles] = useState<FileList | null>(null);
@@ -22,7 +24,10 @@ export default withPageAuthRequired(function Page() {
     ): Blob;
     stream(): ReadableStream<any>;
     text(): Promise<string>;
+    width: number;
+    height: number;
   }> | null>([]);
+
   const { user } = useUser();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -87,20 +92,85 @@ export default withPageAuthRequired(function Page() {
     if (files) {
       setFiles(files);
       const filesToShow = Array.from(files).map((file) => {
-        const image = {
-          ...file,
-          original: URL.createObjectURL(file),
-          thumbnail: URL.createObjectURL(file),
-        };
-        return image;
+        return new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => {
+            let newWidth = img.width;
+            let newHeight = img.height;
+
+            if (newWidth > 350) {
+              const aspectRatio = newHeight / newWidth;
+              newWidth = 350;
+              newHeight = newWidth * aspectRatio;
+            }
+            const image = {
+              ...file,
+              original: URL.createObjectURL(file),
+              thumbnail: URL.createObjectURL(file),
+              width: newWidth,
+              height: newHeight,
+            };
+            resolve(image);
+          };
+          img.onerror = (err) => {
+            reject(err);
+          };
+          img.src = URL.createObjectURL(file);
+        });
       });
-      setShowFiles(filesToShow);
+
+      Promise.all(filesToShow)
+        .then((images) => {
+          setShowFiles(images as Array<{
+            original: string;
+            thumbnail: string;
+            lastModified: number;
+            name: string;
+            webkitRelativePath: string;
+            size: number;
+            type: string;
+            arrayBuffer(): Promise<ArrayBuffer>;
+            slice(start?: number | undefined, end?: number | undefined, contentType?: string | undefined): Blob;
+            stream(): ReadableStream<any>;
+            text(): Promise<string>;
+            width: number;
+            height: number;
+          }>);
+        })
+        .catch((err) => {
+          console.error('Error loading images:', err);
+        });
     }
+  };
+
+  const renderImagesForCarousel = (data: any[]) => {
+    return data.map((photo: any, index: number) => {
+      return (
+        <div key={photo.key} className="item" data-value={index}>
+          <NextImage
+            src={photo.original}
+            alt={'photo.alt'}
+            title={'photo.title'}
+            height={photo.height}
+            width={photo.width}
+          />
+        </div>
+      );
+    });
+  };
+
+  const renderImagesForUpload = (files: Array<any>) => {
+    const carouselItems = renderImagesForCarousel(files);
+    return <>
+      <div className="carousel">
+        <Carousel items={carouselItems} />
+      </div>
+    </>
   };
 
   return (
     <main className="uploads">
-      <h1>Upload a File to S3</h1>
+      <h1>Upload Files</h1>
       <form onSubmit={handleSubmit}>
         <input
           id="file"
@@ -113,9 +183,9 @@ export default withPageAuthRequired(function Page() {
           Upload
         </button>
       </form>
-      {/* <section>
-        {showFiles && <ImageGallery items={showFiles} />}
-      </section> */}
+      <section>
+        {Array.isArray(showFiles) && showFiles.length > 0 ? renderImagesForUpload(showFiles) : null}
+      </section>
     </main>
   );
 });
