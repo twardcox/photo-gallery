@@ -1,9 +1,9 @@
+import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 import { NextPage } from 'next';
+import Image from 'next/image';
 import React from 'react';
 // import { CodeSnippet } from "@/components/code-snippet";
-import Image from 'next/image';
 import { getUserProfileData } from '@/services/profile.service';
-import { withPageAuthRequired } from '@auth0/nextjs-auth0';
 
 const Profile: NextPage = withPageAuthRequired(
   async () => {

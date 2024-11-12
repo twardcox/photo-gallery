@@ -1,9 +1,9 @@
 'use client';
 
-import Header from './Header';
 import { withPageAuthRequired } from '@auth0/nextjs-auth0/client';
 
 import { ReactNode } from 'react';
+import Header from './Header';
 
 interface PageProps {
   children: ReactNode;

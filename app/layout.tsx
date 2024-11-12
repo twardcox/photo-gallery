@@ -1,8 +1,8 @@
 'use client';
 
 import '../styles/global.scss';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { UserProvider } from '@auth0/nextjs-auth0/client';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Create a client
 const queryClient = new QueryClient();

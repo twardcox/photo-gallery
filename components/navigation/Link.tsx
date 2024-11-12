@@ -1,8 +1,8 @@
 'use client';
 
+import classnames from 'classnames';
 import { usePathname } from 'next/navigation';
 import React from 'react';
-import classnames from 'classnames';
 
 interface LinkProps {
   path: string;
