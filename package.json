@@ -22,6 +22,7 @@
     "@axe-core/puppeteer": "^4.10.0",
     "@tanstack/react-query": "^5.56.2",
     "@types/node": "^22.9.0",
+    "@types/uuid": "^10.0.0",
     "aws-crt": "^1.19.0",
     "aws-sdk": "^2.1497.0",
     "axe-puppeteer": "^1.1.1",
