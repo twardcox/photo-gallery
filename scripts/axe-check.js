@@ -7,17 +7,18 @@ const puppeteer = require('puppeteer');
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
   // run program on local development server
-  await page.goto(process.argv[2]); // Replace with your local development URL
+  await page.goto(process.argv[2]);
 
   const results = await new AxePuppeteer(page).analyze();
   await browser.close();
 
-  const searchSelectorsInFiles = async (dir, selector) => {
-    const logFilePath = path.resolve(__dirname, 'violations-log.json');
+  const searchSelectorsInFiles = async (dir, selector, fileLogs) => {
 
-    const logToFile = (message) => {
-      fs.appendFileSync(logFilePath, message + '\n', 'utf-8');
-    };
+    // const logFilePath = path.resolve(__dirname, 'violations-log.json');
+
+    // const logToFile = (message) => {
+    //   fs.appendFileSync(logFilePath, message + '\n', 'utf-8');
+    // };
 
     const files = fs.readdirSync(dir);
 
@@ -40,19 +41,27 @@ const puppeteer = require('puppeteer');
         lines.forEach((line, index) => {
           if (line.includes(selector)) {
             const logMessage = `Selector \x1b[36m"${selector}"\x1b[0m \nfound in file: \x1b[32m${filePath} \x1b[36mat line ${index + 1}\x1b[0m`;
+
+            const fileMessage = `Selector "${selector}" found in file: ${filePath} at line ${index + 1}`;
+
+            fileLogs[`${index}-${selector}`] = fileMessage;
+
+
             console.log(
               logMessage
             );
             console.log(' ');
             console.log('=======================================');
-            logToFile(logMessage);
           }
         });
       }
     });
+    console.log('fileLogs: ', fileLogs);
+    return fileLogs;
   };
 
-  const logData = (violation, node) => {
+  const logData = async (violation, node, selector = '') => {
+    const fileLogs = {};
     console.log('\x1b[31mViolation: \x1b[0m', violation.id);
     console.log('\x1b[33mDescription: \x1b[0m', violation.description);
     console.log('\x1b[32mHelp: \x1b[0m', violation.help);
@@ -62,6 +71,16 @@ const puppeteer = require('puppeteer');
     console.log('');
     console.log(node.failureSummary);
     console.log('');
+
+
+
+    if (selector !== '') {
+      await searchSelectorsInFiles(
+        path.resolve(__dirname, '..'),
+        selector, fileLogs
+      );
+    }
+
     const logEntry = {
       violation: {
         id: violation.id,
@@ -75,7 +94,10 @@ const puppeteer = require('puppeteer');
         html: node.html,
         failureSummary: node.failureSummary,
       },
+      logs: fileLogs,
     };
+
+
 
     const logEntryString = JSON.stringify(logEntry, null, 2);
 
@@ -84,25 +106,41 @@ const puppeteer = require('puppeteer');
   };
 
   if (results.violations.length > 0) {
-    console.log('results.violations: ', results.violations);
     console.error('Accessibility violations found:');
 
     const selectors = {};
 
-    results.violations.forEach((violation, index) => {
+    results.violations.forEach((violation) => {
       violation.nodes.forEach(async (node) => {
-        console.log('node: ', node);
         const selector = node.target[0].split('>').reverse()[0].trim();
+        const elemClassNames = node.html.match(/class="([^"]*)"/);
+
         const regex = /^[.#]/;
+
+        if (elemClassNames) {
+          const classNames = elemClassNames[1].split(' ');
+          classNames.forEach(async (elemClass) => {
+            if (!selectors[elemClass]) {
+              console.log(' ');
+              selectors[elemClass] = elemClass;
+              await logData(violation, node, elemClass);
+              // await searchSelectorsInFiles(
+              //   path.resolve(__dirname, '..'),
+              //   elemClass,
+              // );
+            }
+          });
+        }
+
         if (regex.test(selector)) {
           if (!selectors[selector]) {
             console.log(' ');
             selectors[selector] = selector;
-            logData(violation, node);
-            await searchSelectorsInFiles(
-              path.resolve(__dirname, '..'),
-              selector.replace(/^[.#]/, ''),
-            );
+            await logData(violation, node, selector.replace(/^[.#]/, ''));
+            // await searchSelectorsInFiles(
+            //   path.resolve(__dirname, '..'),
+            //   selector.replace(/^[.#]/, ''),
+            // );
           }
         } else {
           console.log(' ');

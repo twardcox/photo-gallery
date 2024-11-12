@@ -29,6 +29,7 @@ export default withPageAuthRequired(function Page() {
   }> | null>([]);
 
   const { user } = useUser();
+  console.log('user: ', user);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -39,6 +40,7 @@ export default withPageAuthRequired(function Page() {
     }
     // start mapping here
     Array.from(files).forEach(async (file) => {
+      console.log('file: ', file);
       if (file.type !== 'image/png' && file.type !== 'image/jpeg') {
         alert('Please select a PNG or JPEG file.');
         return;
@@ -46,7 +48,10 @@ export default withPageAuthRequired(function Page() {
 
       setUploading(true);
       const filename = `${file.name.replace(' ', '_').replace(imageRegex, '')}${file.lastModified}`;
-      const metaData = { 'x-amz-meta-name': user?.name };
+      // other metadata can be added here
+
+      const metaData = { 'x-amz-meta-user': user?.name };
+
       const response = await fetch(process.env.NEXT_PUBLIC_BASE_URL + '/api/upload', {
         method: 'POST',
         headers: {

@@ -27,10 +27,15 @@
   .alice-carousel__stage-item {
     border: solid 1px transparent;
     transition: border 1s ease-in-out;
+
+    img {
+      border-radius: 5px;
+    }
   }
 
   .alice-carousel__stage-item.__active {
-    border: solid 3px var(--color-orange);
+    border: solid 5px var(--color-orange);
+    border-radius: 10px;
   }
 
   .alice-carousel {

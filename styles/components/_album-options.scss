@@ -24,3 +24,9 @@
     margin-top: 1rem;
   }
 }
+
+@include for_breakpoint('tablet') {
+  .options {
+    justify-content: center;
+  }
+}

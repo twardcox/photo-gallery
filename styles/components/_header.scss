@@ -1,10 +1,10 @@
+@import 'breakpoints';
+
 .header {
   background-color: var(--color-black);
   color: var(--color-orange);
   padding: 1rem;
   text-align: center;
-  height: 200px;
-  // clip-path: ellipse(85% 100% at 50% 0%);
   display: grid;
   align-content: space-between;
 
@@ -13,13 +13,8 @@
     background-color: transparent;
   }
 
-  div {
-    background-color: var(--color-black);
+  .nav-bar-buttons {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2rem;
-    color: var(--color-orange);
   }
 
   a {
@@ -34,6 +29,37 @@
 
     &:hover {
       color: var(--color-yellow);
+    }
+  }
+}
+
+
+@include for_breakpoint('mobile') {
+  .header {
+    .nav-bar-buttons {
+      background-color: var(--color-black);
+      display: grid;
+      grid-template-rows: 1fr;
+      justify-content: center;
+      align-items: center;
+      color: var(--color-orange);
+    }
+
+    a {
+      padding-bottom: 5px
+    }
+  }
+}
+
+@include for_breakpoint('tablet') {
+  .header {
+    .nav-bar-buttons {
+      background-color: var(--color-black);
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      text-align: center;
+      color: var(--color-orange);
+      gap: 0.5rem;
     }
   }
 }

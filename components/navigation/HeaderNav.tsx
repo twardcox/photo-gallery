@@ -1,8 +1,8 @@
 'use client';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
 import React, { useEffect, useRef } from 'react';
 import { Link } from './Link';
-import { useUser } from '@auth0/nextjs-auth0/client';
 
 export const HeaderNav = () => {
   const { user } = useUser();
@@ -26,8 +26,8 @@ export const HeaderNav = () => {
         <>
           <Link path="/" label="Home" />
           <Link path="/admin/profile" label="Profile" />
-          <Link path="/photos/gallery" label="View Gallery" />
-          <Link path="/photos/upload" label="Upload Images" />
+          <Link path="/photos/gallery" label="Gallery" />
+          <Link path="/photos/upload" label="Upload" />
           <Link path="/api/auth/logout" label="Log Out" />
         </>
       )}
