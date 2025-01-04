@@ -30,7 +30,7 @@
     "cookie": "^0.6.0",
     "encoding": "^0.1.13",
     "eslint": "^9.14.0",
-    "next": "^14.0.2",
+    "next": "^14.2.21",
     "react": "18.2.0",
     "react-alice-carousel": "^2.9.1",
     "react-dom": "18.2.0",
